@@ -7,7 +7,7 @@ int getTemp();
 void setCorrection();
 
 int setTemp;
-int setTime = 66000;
+int setTime = 0;
 int secPassed = 0;
 
 float powerOut;
@@ -30,10 +30,17 @@ int main(void)
 }
 int getTemp()
 {
+    }
+
     int temp;
     FILE *fp;
 
-    fp = fopen("tempFile", "r");
+    fp = fopen("/sys/bus/w1/devices/28-000005f5dac4/w1_slave", "r");
+
+    if(fp == -1) {
+        perror ("Couldn't open the w1 device.");
+        return 1;
+    }
 
     rewind(fp);
     fscanf(fp, " %d ", &temp);
