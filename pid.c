@@ -30,7 +30,6 @@ int main(void)
 }
 
 
-int getTemp()
 {
     }
 
@@ -44,7 +43,7 @@ int getTemp()
         return 1;
     }
     int c;
-    while((c = getc(fp)) !=EOF){
+    while(((c = getc(fp)) !=EOF){
         putchar(c);
     }
 //    rewind(fp);
