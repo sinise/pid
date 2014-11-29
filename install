@@ -1,0 +1,52 @@
+  GNU nano 2.2.6                    File: install notes.txt                                               
+
+raspberry instalation
+
+setup one wire
+
+to load at boot at these lines to to /etc/modules else just run when they have to be used
+
+if it is ds18b20par (parasite power) this works and no external pullup is nedded    
+
+w1-gpio pullup=1
+w1-therm strong_pullup=2
+
+for normal ds18b20 use
+w1-gpio
+w1-therm 
+
+Connect 
+ds18b20                 raspberry
+gnd                     gnd
+qn                      gpio4 (leg 7)
+vcc                     3,3v (not needed for parasite power)
+
+instal wireringpi
+
+        sudo apt-get install git-core
+
+If you get any errors here, make sure your Pi is up to date with the latest versions of Raspbian:
+
+        sudo apt-get update
+        sudo apt-get upgrade
+
+To obtain WiringPi using GIT:
+
+        git clone git://git.drogon.net/wiringPi
+
+If you have already used the clone operation for the first time, then
+
+        cd wiringPi
+        git pull origin
+
+Will fetch an updated version then you can re-run the build script below.
+
+To build/install there is a new simplified script:
+
+        cd wiringPi
+        ./build
+
+The new build script will compile and install it all for you – it does use the sudo command at one point,$
+
+
+
