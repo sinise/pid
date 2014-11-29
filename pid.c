@@ -9,8 +9,8 @@ void setCorrection();
 int setTemp;
 int setTime = 0;
 int secPassed = 0;
-
 float powerOut;
+
 int main(void)
 {
     time_t startTime = time(NULL);
@@ -28,6 +28,8 @@ int main(void)
         sleep(1);
     }
 }
+
+
 int getTemp()
 {
     }
@@ -41,9 +43,12 @@ int getTemp()
         perror ("Couldn't open the w1 device.");
         return 1;
     }
-
-    rewind(fp);
-    fscanf(fp, " %d ", &temp);
+    int c;
+    while((c = getc(fp)) !=EOF){
+        putchar(c);
+    }
+//    rewind(fp);
+//    fscanf(fp, " %d ", &temp);
     fclose(fp);
-    return temp;
+//    return temp;
 }
