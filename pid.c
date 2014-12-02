@@ -7,10 +7,10 @@
 
 int getTemp();
 void setCorrection();
-
+int setOut();
 float error;
 float temp;
-float setTemp;
+float setTemp = 63.0;
 int setTime = 60000;
 int secPassed = 0;
 float powerOut;
@@ -31,28 +31,49 @@ int main(void)
         unsigned mmPassed = (secPassed - hhPassed*60*60) / 60;
         printf("time passed is %u hours :  %u minutes : %u seconds\n", hhPassed, mmPassed,ssPassed);
         getTemp();
+        setOut();
         printf("curent temperature is %f\n", temp);
         sleep(1);
     }
 }
 
-void setOut() {
-  if (wiringPiSetup () == -1)
-    return 1 ;
 
-  pinMode (0, OUTPUT) ;         // aka BCM_GPIO pin 17
 
-  if(temp - setTemp < 0) {
-  {
-    digitalWrite (0, 1) ;       // On
-    delay (500) ;
+int setOut ()
+{
+  wiringPiSetup () ;
+  pinMode (0, OUTPUT) ;
+  int i = 0;
+  if(temp - setTemp < 0 ){
+    digitalWrite (0, HIGH) ; delay (1000) ;
   }
   else{
-    digitalWrite (0, 0) ;       // On
+    digitalWrite (0,  LOW) ; delay (1000) ;
   }
   return 0 ;
 }
 
+
+/*
+int setOut() {
+  wiringPiSetup () ;
+  pinMode (0, OUTPUT) ;
+
+  pinMode (0, OUTPUT) ;         // aka BCM_GPIO pin 17
+
+  if(temp - setTemp < 0) {
+        printf("set high");
+    digitalWrite (0, HIGH) ; delay (500) ;
+    delay (1000) ;
+  }
+  else{
+    digitalWrite (0,  LOW) ; delay (500) ;
+    delay (1000) ;
+  }
+  return 0 ;
+
+}
+*/
 
 
 
@@ -61,9 +82,10 @@ void setOut() {
 
 int getTemp() {
     char tmp[5];
-//    fp = fopen("/sys/bus/w1/devices/28-000005f5dac4/w1_slave", "r");
     FILE *fp;
-    fp = fopen("w1_slave", "r");
+    fp = fopen("/sys/bus/w1/devices/28-000005f5dac4/w1_slave", "r");
+
+//    fp = fopen("w1_slave", "r");
     char buf[80];
 
     if(fp == 0) {
