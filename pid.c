@@ -23,11 +23,11 @@ float co = 0; // controller output
 int secPassed = 0;
 
 // cycletime for powerOut
-int cycleTime = 200;
+int cycleTime = 2000;
 
 
 // user setings
-float sp = 26.0; // set point
+float sp = 57.0; // set point
 int setTime = 60000;
 
 int main(void)
@@ -44,9 +44,13 @@ int main(void)
         unsigned mmPassed = (secPassed - hhPassed*60*60) / 60;
         printf("time passed is %u hours :  %u minutes : %u seconds\n", hhPassed, mmPassed,ssPassed);
         getTemp();
+        if(pv == 85){
+          getTemp();
+        }
         pidCalc();
-        printf("");
+  //      printf("6\n");
         setOut();
+    //    printf("7\n");
         printf("e %f\n ei %f\n kp %f\n ki %f\n kd %f\n pv %f\n pv_1 %f\n pv_2 e %f\n co %f\n", e, ei, kp, ki, kd, pv, pv_1, pv_2, co);
     }
 }
@@ -66,17 +70,16 @@ int setOut()
 {
   wiringPiSetup () ;
   pinMode (0, OUTPUT) ;
-//  while(1){
-    int timeHigh = co * 100;
-    int timeLow = cycleTime - timeHigh;
+    float timeHigh = 1000 - co * 10;
+    float timeLow = cycleTime - timeHigh;
+    printf("timeHigh = %f  timeLow = %f\n", timeHigh, timeLow);
     if(co > 0 ){
-      digitalWrite (0, HIGH) ; delay (timeHigh) ;
-      digitalWrite (0, LOW) ; delay (timeLow) ;
+      digitalWrite (0, HIGH) ; delay ((int)timeHigh) ;
+      digitalWrite (0, LOW) ; delay ((int)timeLow) ;
     }
     else{
-      digitalWrite (0,  LOW) ; delay (200) ;
+      digitalWrite (0,  LOW) ; delay (2000) ;
     }
-//  }
     return 0 ;
 }
 
@@ -94,19 +97,13 @@ int getTemp() {
         return 1;
     }
     fgets(buf, 80, fp);
-    int gotTemp = 0;
-    while(!gotTemp ){
-      printf("starting loop in getTemp" );
+//      printf("starting loop in getTemp\n" );
       if(strstr(buf, "YES") != NULL){
           fgets(buf, 80, fp);
           strncpy(tmp, strstr(buf, "t=") + 2, 5);
           pv = atoi(tmp) / 1000.0;
-          printf("pv = ", pv );
-          if(pv != 85){
-            gotTemp = 1;
-          }
+          printf("pv = %f \n", pv );
       }
-    } 
     fclose(fp);
     return 1;
 }
