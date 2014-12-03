@@ -23,11 +23,11 @@ float co = 0; // controller output
 int secPassed = 0;
 
 // cycletime for powerOut
-int cycleTime = 2000;
+int cycleTime = 200;
 
 
 // user setings
-float sp = 63.0; // set point
+float sp = 26.0; // set point
 int setTime = 60000;
 
 int main(void)
@@ -44,7 +44,6 @@ int main(void)
         unsigned mmPassed = (secPassed - hhPassed*60*60) / 60;
         printf("time passed is %u hours :  %u minutes : %u seconds\n", hhPassed, mmPassed,ssPassed);
         getTemp();
-        printf("1");
         pidCalc();
         printf("");
         setOut();
@@ -58,6 +57,9 @@ int pidCalc(){
   float p = kp * (pv_1 - pv);
   float i = ki*ei;
   float d = kd * (2.0 * pv_1 - pv - pv_2);
+  pv_1 = pv;
+  pv_2 = pv_1;
+  co = p + i + d;
 }
 
 int setOut()
@@ -65,14 +67,14 @@ int setOut()
   wiringPiSetup () ;
   pinMode (0, OUTPUT) ;
 //  while(1){
-    int timeHigh = co;
+    int timeHigh = co * 100;
     int timeLow = cycleTime - timeHigh;
     if(co > 0 ){
       digitalWrite (0, HIGH) ; delay (timeHigh) ;
       digitalWrite (0, LOW) ; delay (timeLow) ;
     }
     else{
-      digitalWrite (0,  LOW) ; delay (2000) ;
+      digitalWrite (0,  LOW) ; delay (200) ;
     }
 //  }
     return 0 ;
@@ -92,11 +94,19 @@ int getTemp() {
         return 1;
     }
     fgets(buf, 80, fp);
-    if(strstr(buf, "YES") != NULL){
-        fgets(buf, 80, fp);
-        strncpy(tmp, strstr(buf, "t=") + 2, 5);
-        pv = atoi(tmp) / 1000.0;
-    }
+    int gotTemp = 0;
+    while(!gotTemp ){
+      printf("starting loop in getTemp" );
+      if(strstr(buf, "YES") != NULL){
+          fgets(buf, 80, fp);
+          strncpy(tmp, strstr(buf, "t=") + 2, 5);
+          pv = atoi(tmp) / 1000.0;
+          printf("pv = ", pv );
+          if(pv != 85){
+            gotTemp = 1;
+          }
+      }
+    } 
     fclose(fp);
     return 1;
 }
