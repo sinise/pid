@@ -47,3 +47,4 @@ Will fetch an updated version then you can re-run the build script below.
 
 
 
+when compiling use -lwiringPi
