@@ -48,3 +48,24 @@ Will fetch an updated version then you can re-run the build script below.
 
 
 when compiling use -lwiringPi
+
+
+
+*****************
+to make wifi reconnect, run this with cron
+
+#!/bin/bash
+   if ifconfig wlan0 | grep -q "inet addr:" ; then
+      sleep 60
+   else
+      echo "Network connection down! Attempting reconnection."
+      ifup --force wlan0
+      sleep 10
+   fi
+*************
+1. sudo crontab -e
+
+2. At the bottom of the file, enter a line that looks like this (this presumes your script is named "network-monitor.sh"
+
+# m h dom mon dow command
+*/5 * * * * /home/pi/network-monitor.sh

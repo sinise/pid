@@ -50,9 +50,10 @@ int main(void)
         pidCalc();
   //      printf("6\n");
         setOut();
-    //    printf("7\n");
-        printf("e %f\n ei %f\n kp %f\n ki %f\n kd %f\n pv %f\n pv_1 %f\n pv_2 e %f\n co %f\n", e, ei, kp, ki, kd, pv, pv_1, pv_2, co);
+//        printf("e %f\n ei %f\n kp %f\n ki %f\n kd %f\n pv %f\n pv_1 %f\n pv_2 e %f\n co %f\n", e, ei, kp, ki, kd, pv, pv_1, pv_2, co);
     }
+       printf("Done");
+
 }
 
 int pidCalc(){
@@ -70,10 +71,11 @@ int setOut()
 {
   wiringPiSetup () ;
   pinMode (0, OUTPUT) ;
-    float timeHigh = 1000 - co * 10;
+    float timeHigh = co
+;
     float timeLow = cycleTime - timeHigh;
-    printf("timeHigh = %f  timeLow = %f\n", timeHigh, timeLow);
-    if(co > 0 ){
+    printf("timeHigh = %d  timeLow = %d\n", (int)timeHigh, (int)timeLow);
+    if(co > 0 && timeHigh > 0){
       digitalWrite (0, HIGH) ; delay ((int)timeHigh) ;
       digitalWrite (0, LOW) ; delay ((int)timeLow) ;
     }
